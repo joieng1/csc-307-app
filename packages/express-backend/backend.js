@@ -84,6 +84,17 @@ const addUser = (user) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  console.log("RAN");
   res.send();
+});
+
+const deleteUserById = (id) => {
+  users["users_list"] = users["users_list"].filter((user) => user["id"] !== id);
+  return users;
+}
+
+app.delete("/users/:id", (req, res) => {
+  console.log("CANNASD")
+  const userId = req.params["id"];
+  let result = deleteUserById(userId);
+  res.send(result);
 });
