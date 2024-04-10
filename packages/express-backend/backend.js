@@ -9,29 +9,29 @@ const users = {
     {
       id: "xyz789",
       name: "Charlie",
-      job: "Janitor"
+      job: "Janitor",
     },
     {
       id: "abc123",
       name: "Mac",
-      job: "Bouncer"
+      job: "Bouncer",
     },
     {
       id: "ppp222",
       name: "Mac",
-      job: "Professor"
+      job: "Professor",
     },
     {
       id: "yat999",
       name: "Dee",
-      job: "Aspring actress"
+      job: "Aspring actress",
     },
     {
       id: "zap555",
       name: "Dennis",
-      job: "Bartender"
-    }
-  ]
+      job: "Bartender",
+    },
+  ],
 };
 
 app.use(express.json());
@@ -41,20 +41,26 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(
-    `Example app listening at http://localhost:${port}`
-  );
+  console.log(`Example app listening at http://localhost:${port}`);
 });
 
 const findUserByName = (name) => {
-  return users["users_list"].filter(
-    (user) => user["name"] === name
-  );
+  return users["users_list"].filter((user) => user["name"] === name);
 };
 
 app.get("/users", (req, res) => {
   const name = req.query.name;
+  const job = req.query.job;
+  console.log("Name" + name + job);
   if (name != undefined) {
+    // if name and job is inputted
+    if (job != undefined) {
+      let result = getAllUsersFilter(name, job);
+      result = { users_list: result };
+      res.send(result);
+      return;
+    }
+    //filter by name only
     let result = findUserByName(name);
     result = { users_list: result };
     res.send(result);
@@ -90,11 +96,17 @@ app.post("/users", (req, res) => {
 const deleteUserById = (id) => {
   users["users_list"] = users["users_list"].filter((user) => user["id"] !== id);
   return users;
-}
+};
 
 app.delete("/users/:id", (req, res) => {
-  console.log("CANNASD")
+  console.log("CANNASD");
   const userId = req.params["id"];
   let result = deleteUserById(userId);
   res.send(result);
 });
+
+const getAllUsersFilter = (name, job) => {
+  return users["users_list"]
+    .filter((user) => user["name"] === name)
+    .filter((user) => user["job"] === job);
+};
