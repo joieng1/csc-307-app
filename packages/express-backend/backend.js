@@ -1,7 +1,9 @@
 // backend.js
 import express from "express";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 const port = 8000;
 
 const users = {
