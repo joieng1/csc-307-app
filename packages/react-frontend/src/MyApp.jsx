@@ -19,13 +19,17 @@ function MyApp() {
       },
       body: JSON.stringify(person),
     });
-
     return promise;
   }
 
   function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((res) => {
+        if (res.status === 201) {
+          // update state if response returns 201
+          setCharacters([...characters, person]);
+        }
+      })
       .catch((error) => {
         console.log(error);
       });
