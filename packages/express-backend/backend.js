@@ -91,8 +91,9 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+  userToAdd["id"] = Date.now();
   addUser(userToAdd);
-  res.send();
+  res.status(201).send(users);
 });
 
 const deleteUserById = (id) => {
