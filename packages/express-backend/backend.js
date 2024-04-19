@@ -91,21 +91,30 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  userToAdd["id"] = Date.now();
+  userToAdd["id"] = Date.now().toString();
   addUser(userToAdd);
   res.status(201).send(users);
 });
 
 const deleteUserById = (id) => {
-  users["users_list"] = users["users_list"].filter((user) => user["id"] !== id);
-  return users;
+  const index = users["users_list"].findIndex((user) => user["id"] === id);
+  if(index !== -1) {
+    users["users_list"].splice(index, 1);
+    return true;
+  }
+  return false;
 };
 
 app.delete("/users/:id", (req, res) => {
-  console.log("CANNASD");
   const userId = req.params["id"];
   let result = deleteUserById(userId);
-  res.send(result);
+  if(result) {
+    res.status(204).send();
+  }
+  else {
+    res.status(404).send();
+  }
+  
 });
 
 const getAllUsersFilter = (name, job) => {
