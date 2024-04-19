@@ -53,7 +53,6 @@ const findUserByName = (name) => {
 app.get("/users", (req, res) => {
   const name = req.query.name;
   const job = req.query.job;
-  console.log("Name" + name + job);
   if (name != undefined) {
     // if name and job is inputted
     if (job != undefined) {

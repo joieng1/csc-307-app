@@ -12,7 +12,7 @@ function MyApp() {
   }
 
   function postUser(person) {
-    const promise = fetch("Http://localhost:8000/users", {
+    const promise = fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,10 +24,11 @@ function MyApp() {
 
   function updateList(person) {
     postUser(person)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 201) {
           // update state if response returns 201
-          setCharacters([...characters, person]);
+          const data = await res.json();
+          setCharacters(data.users_list);
         }
       })
       .catch((error) => {
@@ -35,11 +36,23 @@ function MyApp() {
       });
   }
 
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
+  async function removeOneCharacter(index) {
+    const userId = characters[index].id;
+    await fetch(`http://localhost:8000/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.status == 204) {
+          const updatedCharacters = characters.filter((_, i) => i !== index);
+          setCharacters(updatedCharacters);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
