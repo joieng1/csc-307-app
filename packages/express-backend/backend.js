@@ -25,6 +25,7 @@ app.get("/users", async (req, res) => {
   res.send(result);
 });
 
+
 app.get("/users/:id", async (req, res) => {
   const id = req.params["id"]; //or req.params.id
   let result = await userServices.findUserById(id);
@@ -38,22 +39,21 @@ app.get("/users/:id", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   const userToAdd = req.body;
+  try {
   const result = await userServices.addUser(userToAdd);
-  if (result) {
   res.status(201).send(result);
-  }
-  else {
-    res.send("Failed to post");
+  } catch (err) {
+    res.send("Failed to post: ", err);
   }
 });
 
-app.delete("/users/:id", (req, res) => {
+
+app.delete("/users/:id", async (req, res) => {
   const userId = req.params["id"];
-  let result = deleteUserById(userId);
-  if(result) {
+  try {
+    const result = await userServices.deleteUser(userId);
     res.status(204).send();
-  }
-  else {
+  } catch (error) {
     res.status(404).send();
   }
 });
