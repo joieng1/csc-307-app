@@ -21,8 +21,12 @@ app.listen(port, () => {
 app.get("/users", async (req, res) => {
   const name = req.query.name;
   const job = req.query.job;
-  const result = await userServices.getUsers(name,job);
-  res.send(result);
+  try {
+    const result = await userServices.getUsers(name,job);
+      res.send(result);
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 
