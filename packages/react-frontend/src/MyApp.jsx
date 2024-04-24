@@ -28,7 +28,7 @@ function MyApp() {
         if (res.status === 201) {
           // update state if response returns 201
           const data = await res.json();
-          setCharacters(data.users_list);
+          setCharacters(data);
         }
       })
       .catch((error) => {
@@ -37,7 +37,7 @@ function MyApp() {
   }
 
   async function removeOneCharacter(index) {
-    const userId = characters[index].id;
+    const userId = characters[index]._id;
     await fetch(`http://localhost:8000/users/${userId}`, {
         method: "DELETE",
         headers: {
@@ -58,7 +58,7 @@ function MyApp() {
   useEffect(() => {
     fetchUsers()
       .then((res) => res.json())
-      .then((json) => setCharacters(json["users_list"]))
+      .then((json) => setCharacters(json))
       .catch((error) => {
         console.log(error);
       });
